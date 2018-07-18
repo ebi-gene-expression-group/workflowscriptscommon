@@ -14,6 +14,6 @@
 #' > split_string('one,two')
 #' "one" "two"
 
-split_string <- function(x, sep=','){
+wsc_split_string <- function(x, sep=','){
   unlist(strsplit(x, sep))
 }

@@ -5,7 +5,7 @@
 #'
 #' @return a list containing option values, as per parse_args()
 
-gwc_parse_args <- function(option_list, mandatory=c()){
+wsc_parse_args <- function(option_list, mandatory=c()){
 
   parser = OptionParser(option_list=option_list)
   opt = parse_args(parser, convert_hyphens_to_underscores = TRUE)
@@ -33,7 +33,7 @@ gwc_parse_args <- function(option_list, mandatory=c()){
 #'
 #' @return Numeric vector
 
-parse_numeric <- function(opt, varname, val_for_na=NA, length=1){
+wsc_parse_numeric <- function(opt, varname, val_for_na=NA, length=1){
   if (is.na(opt[[varname]])){
     return(rep(val_for_na, length))
   }else{
