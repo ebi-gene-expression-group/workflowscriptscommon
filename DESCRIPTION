@@ -1,0 +1,13 @@
+Package: gegworkflowcommon
+Type: Package
+Title: Common Functions for Workflow Script Packages
+Version: 0.1.0
+Author: Who wrote it
+Maintainer: Jonathan Manning <jmanning@ebi.ac.uk>
+Description: A rag-tag bunch of functions shared between packages
+    defining scripts for use in workflows for single-cell rna-seq
+    analysis.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
