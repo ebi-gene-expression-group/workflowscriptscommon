@@ -37,7 +37,7 @@ wsc_parse_numeric <- function(opt, varname, val_for_na=NA, length=1){
   if (is.na(opt[[varname]])){
     return(rep(val_for_na, length))
   }else{
-    vals <- split_string(opt[[varname]])
+    vals <- wsc_split_string(opt[[varname]])
   }
 
   if ( any(c(grepl('[^0-9.]', vals)))){
