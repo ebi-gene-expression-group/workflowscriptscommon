@@ -40,9 +40,10 @@ wsc_parse_numeric <- function(opt, varname, val_for_na=NA, length=1){
     vals <- wsc_split_string(opt[[varname]])
   }
 
-  if ( any(c(grepl('[^0-9.]', vals)))){
+  vals <- suppressWarnings(as.numeric(vals))
+  if (any(is.na(vals))) {
     stop("Non-numeric filters supplied")
   }else{
-    return(as.numeric(vals))
+    return(vals)
   }
 }
