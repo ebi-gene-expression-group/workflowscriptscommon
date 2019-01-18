@@ -39,11 +39,11 @@ wsc_parse_numeric <- function(opt, varname, val_for_na=NA, length=1){
   }else{
     vals <- wsc_split_string(opt[[varname]])
   }
-
+  
   vals <- suppressWarnings(as.numeric(vals))
   if (any(is.na(vals))) {
     stop("Non-numeric filters supplied")
-  }else{
+  } else {
     return(vals)
   }
 }
