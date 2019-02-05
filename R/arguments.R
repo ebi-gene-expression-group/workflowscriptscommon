@@ -47,3 +47,26 @@ wsc_parse_numeric <- function(opt, varname, val_for_na=NA, length=1){
     return(vals)
   }
 }
+
+#' Check supplied value is limited to a number of choices
+#'
+#' Used as a callback function for make_option() to allow putting constraints
+#' on the supplied value.
+#'
+#' @param opt The option S4 object
+#' @param arg_name The long flag string
+#' @param arg_val The value of the option
+#' @param parser The parser S4 object
+#' @param choices A vector of values to choose from
+#'
+#' @return arg_val if arg_val %in% choices, otherwise raise error
+
+wsc_choose_from <- function(opt, arg_name, arg_val, parser, choices) {
+    if (length(choices) == 0) stop(paste("choice is empty for", arg_name))
+    if (length(arg_val) != 1) stop(paste(arg_name, "expects a single value")
+    if (! arg_val %in% choices) {
+        stop(paste0("supplied value ", arg_val, " for ", arg_name,
+                    " is not one of c(", paste(x, collapse=","), ")"))
+    }
+    arg_val
+}
