@@ -63,7 +63,7 @@ wsc_parse_numeric <- function(opt, varname, val_for_na=NA, length=1){
 
 wsc_choose_from <- function(opt, arg_name, arg_val, parser, choices) {
     if (length(choices) == 0) stop(paste("choice is empty for", arg_name))
-    if (length(arg_val) != 1) stop(paste(arg_name, "expects a single value")
+    if (length(arg_val) != 1) stop(paste(arg_name, "expects a single value"))
     if (! arg_val %in% choices) {
         stop(paste0("supplied value ", arg_val, " for ", arg_name,
                     " is not one of c(", paste(x, collapse=","), ")"))
