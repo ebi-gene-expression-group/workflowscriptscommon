@@ -13,7 +13,7 @@ wsc_parse_args <- function(option_list, mandatory=c()){
   # Check options
 
   for (comp in mandatory){
-    if (is.na(opt[[comp]])){
+    if ((! comp %in% names(opt)) || is.na(opt[[comp]])){
       print_help(parser)
       stop(paste0("Mandatory argment '", comp, "' not supplied"))
     }
