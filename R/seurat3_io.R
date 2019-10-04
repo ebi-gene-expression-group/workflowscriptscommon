@@ -22,7 +22,7 @@ write_seurat3_object <- function(seurat_object, format, output_path, verbose = F
   } else if(format == "singlecellexperiment") {
     saveRDS(as.SingleCellExperiment(seurat_object), file = output_path)
   } else {
-    cat("Format",format,"for output not recognised, failing now.")
+    cat("Format",format,"for output not recognised, failing now.", file = stderr())
     quit(status = 1)
   }
 }
@@ -58,7 +58,7 @@ read_seurat3_object <- function(input_path, format, ident_for_adata = "louvain")
     }
     return(seurat_object)
   } else {
-    cat("Format",format,"for input not recognised, failing now.")
+    cat("Format",format,"for input not recognised, failing now.", file = stderr())
     quit(status = 1)
   }
 }
