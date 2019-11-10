@@ -7,6 +7,7 @@
 #'
 #' @param seurat_object The seurat object to be serialised
 #' @param format The file format to write against: "loom", "seurat" or "singlecellexperiment"
+#' @param assay The Seurat assay to use for writing; "RNA" by default.
 #' @param verbose Only applicable to some formats, defaults to FALSE.
 #'
 #' @export
@@ -14,13 +15,13 @@
 #' @examples
 #' > write_seurat3_object(tsne_object, format="loom")
 
-write_seurat3_object <- function(seurat_object, format, output_path, verbose = FALSE){
+write_seurat3_object <- function(seurat_object, format, output_path, verbose = FALSE, assay="RNA"){
   if(format == "loom") {
-    as.loom(seurat_object, filename = output_path, verbose = verbose)
+    as.loom(seurat_object, filename = output_path, verbose = verbose, assay = assay)
   } else if(format == "seurat" ) {
     saveRDS(seurat_object, file = output_path)
   } else if(format == "singlecellexperiment") {
-    saveRDS(as.SingleCellExperiment(seurat_object), file = output_path)
+    saveRDS(as.SingleCellExperiment(seurat_object, assay=assay), file = output_path)
   } else {
     cat("Format",format,"for output not recognised, failing now.", file = stderr())
     quit(status = 1)
