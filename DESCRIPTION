@@ -1,8 +1,8 @@
 Package: workflowscriptscommon
 Type: Package
 Title: Common Functions for Workflow Script Packages
-Version: 0.0.5
-Author: Jonathan Manning
+Version: 0.0.6
+Author: Jonathan Manning, Pablo Moreno
 Maintainer: Jonathan Manning <jmanning@ebi.ac.uk>
 Description: A rag-tag bunch of functions shared between packages
     defining scripts for use in workflows for single-cell rna-seq
