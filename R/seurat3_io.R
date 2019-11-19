@@ -7,6 +7,7 @@
 #'
 #' @param seurat_object The seurat object to be serialised
 #' @param format The file format to write against: "loom", "seurat" or "singlecellexperiment"
+#' @param assay The Seurat assay to use for writing; "RNA" by default.
 #' @param verbose Only applicable to some formats, defaults to FALSE.
 #'
 #' @export
@@ -14,13 +15,13 @@
 #' @examples
 #' > write_seurat3_object(tsne_object, format="loom")
 
-write_seurat3_object <- function(seurat_object, format, output_path, verbose = FALSE){
+write_seurat3_object <- function(seurat_object, format, output_path, verbose = FALSE, assay="RNA"){
   if(format == "loom") {
-    as.loom(seurat_object, filename = output_path, verbose = verbose)
+    as.loom(seurat_object, filename = output_path, verbose = verbose, assay = assay)
   } else if(format == "seurat" ) {
     saveRDS(seurat_object, file = output_path)
   } else if(format == "singlecellexperiment") {
-    saveRDS(as.SingleCellExperiment(seurat_object), file = output_path)
+    saveRDS(as.SingleCellExperiment(seurat_object, assay=assay), file = output_path)
   } else {
     cat("Format",format,"for output not recognised, failing now.", file = stderr())
     quit(status = 1)
@@ -37,20 +38,29 @@ write_seurat3_object <- function(seurat_object, format, output_path, verbose = F
 #' @param seurat_object The seurat object to be serialised
 #' @param format The file format to write against: "loom", "seurat" or "singlecellexperiment"
 #' @param verbose Only applicable to some formats, defaults to FALSE.
+#' @param assay Seurat assay to use, RNA by default.
+#' @param loom_normalized_path Path within /layers in loom to find the normalised data.
+#' @param loom_scaled_path Path within /layers in loom to find the scaled data.
 #'
 #' @export
 #'
 #' @examples
 #' > read_seurat3_object(input_file_loom, format="loom")
-read_seurat3_object <- function(input_path, format, ident_for_adata = "louvain") {
+read_seurat3_object <- function(input_path, format, 
+                                ident_for_adata = "louvain", assay="RNA", 
+                                loom_normalized_path="/norm_data",
+                                loom_scaled_path="/scale_data") {
   if(format == "loom") {
     loom_object <- connect(filename = input_path, mode = "r")
-    return(as.Seurat(loom_object))
+    return(as.Seurat(loom_object, 
+                     assay=assay, 
+                     normalized=loom_normalized_path,
+                     scaled=loom_scaled_path))
   } else if(format == "seurat") {
     return(readRDS(file = input_path))
   } else if(format == "singlecellexperiment") {
     singlecellexp_object<-readRDS(file = input_path)
-    return(as.Seurat(singlecellexp_object))
+    return(as.Seurat(singlecellexp_object, assay=assay))
   } else if(format == "anndata") {
     seurat_object<-ReadH5AD(file = input_path)
     if(! is.null(ident_for_adata)) {
