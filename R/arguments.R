@@ -39,7 +39,7 @@ wsc_parse_numeric <- function(opt, varname, val_for_na=NA, length=1){
   }else{
     vals <- wsc_split_string(opt[[varname]])
   }
-  if(grepl("[0-10]+:[0:10]+",varname)){
+  if(grepl("[0-10]+:[0:10]+",opt[[varname]])){
         varname <- as.numeric(unlist(strsplit(varname, ":")))
         vals <- varname[1]:varname[2]
   }
