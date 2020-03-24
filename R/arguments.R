@@ -24,8 +24,8 @@ wsc_parse_args <- function(option_list, mandatory=c()){
 
 #' Parse numeric parameters and make sure vectors are the right length
 #'
-#' Sometimes a comma-separated string field needs to be parsed to a numeric vector.
-#' Sometimes a "a:b" expression has to be converted to a list
+#' Sometimes a string field needs to be parsed to a numeric vector.
+#' 
 #' @param opt A list containing option values, as per parse_args()
 #' @param varname Variable name to check
 #' @param val_for_na Value to replicate to specified length in the case of NA
@@ -36,14 +36,14 @@ wsc_parse_args <- function(option_list, mandatory=c()){
 wsc_parse_numeric <- function(opt, varname, val_for_na=NA, length=1){
   if (is.na(opt[[varname]])){
     return(rep(val_for_na, length))
+  }else if(grepl("[0-10]+:[0:10]+",opt[[varname]])){
+        vals <- as.numeric(unlist(strsplit(varname, ":")))
+        vals <- vals[1]:vals[2]
   }else{
     vals <- wsc_split_string(opt[[varname]])
   }
-  if(grepl("[0-10]+:[0:10]+",opt[[varname]])){
-        varname <- as.numeric(unlist(strsplit(varname, ":")))
-        vals <- varname[1]:varname[2]
-  }
   vals <- suppressWarnings(as.numeric(vals))
+ 
   if (any(is.na(vals))) {
     stop("Non-numeric filters supplied")
   } else {
