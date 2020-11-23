@@ -36,7 +36,7 @@ wsc_parse_args <- function(option_list, mandatory=c()){
 wsc_parse_numeric <- function(opt, varname, val_for_na=NA, length=1){
   if (is.na(opt[[varname]])){
     return(rep(val_for_na, length))
-  }else if(grepl("[0-10]+:[0:10]+",opt[[varname]])){
+  }else if(grepl("[0-9]+:[0-9]+",opt[[varname]])){
         vals <- as.numeric(unlist(strsplit(opt[[varname]], ":")))
         vals <- vals[1]:vals[2]
   }else{
