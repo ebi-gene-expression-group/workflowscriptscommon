@@ -1,0 +1,10 @@
+name: test-wsc-seurat-4
+dependencies:
+  - bats
+  - r-optparse
+  - libpng
+  - r-cairo
+  - r-seurat=4.0.0
+  - r-loom
+  - bioconductor-scater
+  - r-seuratdisk
