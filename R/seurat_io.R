@@ -17,12 +17,12 @@
 
 write_seurat4_object <- function(seurat_object, format, output_path, verbose = FALSE, assay="RNA", ...){
   if(format == "loom") {
-    as.loom(seurat_object, filename = output_path, verbose = verbose, assay = assay)
+    as.loom(seurat_object, filename = output_path, verbose = verbose)
   } else if(format == "seurat" ) {
     saveRDS(seurat_object, file = output_path)
   } else if(format == "singlecellexperiment") {
     saveRDS(as.SingleCellExperiment(seurat_object, assay=assay), file = output_path)
-  } else if(format == "h5Seurat") {
+  } else if(format == "h5seurat") {
     SaveH5Seurat(seurat_object, filename = output_path, ...)
   } else {
     cat("Format",format,"for output not recognised, failing now.", file = stderr())
@@ -64,6 +64,7 @@ write_seurat3_object <- function(seurat_object, format, output_path, verbose = F
 #' @param assay Seurat assay to use, RNA by default.
 #' @param loom_normalized_path Path within /layers in loom to find the normalised data.
 #' @param loom_scaled_path Path within /layers in loom to find the scaled data.
+#' @param ... passed to Loom -> as.Seurat, singlcellexperiment -> as.Seurat, or LoadH5Seurat, depending on format.
 #'
 #' @export
 #'
@@ -71,22 +72,23 @@ write_seurat3_object <- function(seurat_object, format, output_path, verbose = F
 #' > read_seurat3_object(input_file_loom, format="loom")
 read_seurat4_object <- function(input_path, format, 
                                ident_for_adata = "louvain", assay="RNA", 
-                               loom_normalized_path="/norm_data",
-                               loom_scaled_path="/scale_data", ...) {
+                               update_seurat_object = FALSE, ...) {
   if(format == "loom") {
     loom_object <- Connect(filename = input_path, mode = "r")
     return(as.Seurat(loom_object, 
-                     assay=assay, 
-                     normalized=loom_normalized_path,
-                     scaled=loom_scaled_path))
+                     assay=assay, ...))
   } else if(format == "seurat") {
-    return(readRDS(file = input_path))
+    so<-readRDS(file = input_path)
+    if(update_seurat_object) {
+      so<-UpdateSeuratObject(so)
+    }
+    return(so)
   } else if(format == "singlecellexperiment") {
     singlecellexp_object<-readRDS(file = input_path)
     return(as.Seurat(singlecellexp_object, assay=assay, ...))
   } else if(format == "anndata") {
     # Note that convert relies on the file extension of the given file
-    if(!endsWith(".h5ad")) {
+    if(!endsWith(input_path, ".h5ad")) {
       cat("If transforming h5ad AnnData to H5Seurat, file needs to end with .h5ad")
       quit(status = 1)
     }
@@ -99,7 +101,7 @@ read_seurat4_object <- function(input_path, format,
     return(seurat_object)
   } else if(format == "rds_matrix") {
     return(CreateSeuratObject(readRDS(file = input_path)))
-  } else if(format == "h5Seurat") {
+  } else if(format == "h5seurat") {
     return(LoadH5Seurat(file=input_path, ... ))
   } else {
     cat("Format",format,"for input not recognised, failing now.", file = stderr())

@@ -37,10 +37,10 @@ test_loom_url='https://storage.googleapis.com/linnarsson-lab-loom/l6_r1_immune_c
 test_anndata_url="https://seurat.nygenome.org/pbmc3k_final.h5ad"
 
 test_working_dir=`pwd`/'post_install_tests'
-export test_data_transfer_file=$test_working_dir/pancreas_v3_files.tar.gz
+export test_data_transfer_file=$test_working_dir/$(basename $test_data_transfer_url | sed 's/\?dl=1//')
 export test_data_archive=$test_working_dir/$(basename $test_data_url)
 export test_single_cell_experiment_file=$test_working_dir/$(basename $test_single_cell_experiment_url)
-export test_seurat_experiment_file=$test_working_dir/$(basename $test_seurat_experiment_url)
+export test_seurat_experiment_file=$test_working_dir/$(basename $test_seurat_experiment_url | sed 's/\?dl=0//')
 #export test_single_cell_experiment_file=$test_working_dir/pbmc3k_final.rds
 #export test_scater_file=$test_working_dir/$(basename $test_scater_url)
 export test_loom_file=$test_working_dir/$(basename $test_loom_url)
@@ -80,16 +80,26 @@ fi
 if [ ! -e "$test_single_cell_experiment_file" ]; then
     wget $test_single_cell_experiment_url -O $test_single_cell_experiment_file
 fi
+if [ ! -e "$test_seurat_experiment_file" ]; then
+    Rscript test/get_seurat_data.R $test_seurat_experiment_file
+fi
 if [ ! -e "$test_loom_file" ]; then
     wget $test_loom_url -O $test_loom_file
 fi
 if [ ! -e "$test_anndata_file" ]; then
     wget $test_anndata_url -O $test_anndata_file
 fi
+if [ ! -e "$test_h5seurat_file" ]; then
+    Rscript test/get_h5seurat_data.R $test_h5seurat_file
+fi
+
 
 ################################################################################
-# List tool outputs/ inputs
+# Run tests
 ################################################################################
+
+bats ./run_tests.bats
+
 
 # Data for Seurat
 # 
@@ -97,7 +107,8 @@ fi
 # pbmc <- readRDS(file = "../data/pbmc3k_final.rds")
 # pbmc.sce <- as.SingleCellExperiment(pbmc)
 
-Rscript test/read_all_write_all.R $test_seurat_experiment_file seurat
+# Rscript test/read_all_write_all.R $test_seurat_experiment_file seurat
+# rm -rf ${test_seurat_experiment_file}.*
 
 # Data for Single cell experiment
 #
@@ -107,7 +118,8 @@ Rscript test/read_all_write_all.R $test_seurat_experiment_file seurat
 # manno <- runPCA(manno)
 # manno.seurat <- as.Seurat(manno, counts = "counts", data = "logcounts")
 
-Rscript test/read_all_write_all.R $test_single_cell_experiment_file singlecellexperiment
+# Rscript test/read_all_write_all.R $test_single_cell_experiment_file singlecellexperiment
+# rm -rf ${test_single_cell_experiment_file}.*
 
 # Data for loom
 # download from linnarsson lab
@@ -117,7 +129,8 @@ Rscript test/read_all_write_all.R $test_single_cell_experiment_file singlecellex
 # l6.seurat <- as.Seurat(l6.immune)
 # Idents(l6.seurat) <- "ClusterName"
 
-Rscript test/read_all_write_all.R $test_loom_file loom
+# Rscript test/read_all_write_all.R $test_loom_file loom
+# rm -rf ${test_loom_file}.*
 
 # Data for AnnData
 # url <- "https://seurat.nygenome.org/pbmc3k_final.h5ad"
@@ -126,9 +139,9 @@ Rscript test/read_all_write_all.R $test_loom_file loom
 # pbmc3k <- LoadH5Seurat("pbmc3k_final.h5seurat")
 # pbmc3k
 
-Rscript test/read_all_write_all.R $test_anndata_file anndata
+# Rscript test/read_all_write_all.R $test_anndata_file anndata
+# rm -rf ${test_anndata_file}.*
 
 # Data for h5seurat / requires SeuratData
-
-Rscript test/get_h5seurat_data.R $test_h5seurat_file
-Rscript test/read_all_write_all.R $test_h5seurat_file h5seurat
+# Rscript test/read_all_write_all.R $test_h5seurat_file h5seurat
+# rm -rf ${test_h5seurat_file}.*

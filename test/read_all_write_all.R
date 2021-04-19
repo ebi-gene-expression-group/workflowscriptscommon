@@ -20,9 +20,11 @@ if( input_format == "singlecellexperiment" ) {
 } else if( input_format == "loom" ) {
   params$loom_normalized_path = NULL
   params$loom_scaled_path = NULL
+} else if( input_format == "seurat" ) {
+  params$update_seurat_object = TRUE
 }
 
-so<-invoke(read_seurat4_object, params)
+so<-do.call(read_seurat4_object, params)
 print(paste0("Read file."))
 
 ext = list(loom="loom", singlecellexperiment="sce.rds", seurat="rds", h5seurat="h5seurat")
