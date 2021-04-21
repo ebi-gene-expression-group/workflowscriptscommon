@@ -71,12 +71,12 @@ mkdir -p $data_dir
 # Fetch test data
 ################################################################################
 
-if [ ! -e "$test_data_archive" ]; then
+#if [ ! -e "$test_data_archive" ]; then
     # wget $test_data_url -P $test_working_dir
-fi
-if [ ! -e "$test_data_transfer_file" ]; then
+#fi
+#if [ ! -e "$test_data_transfer_file" ]; then
     # wget $test_data_transfer_url -O $test_data_transfer_file
-fi
+#fi
 if [ ! -e "$test_single_cell_experiment_file" ]; then
     wget $test_single_cell_experiment_url -O $test_single_cell_experiment_file
 fi
@@ -86,9 +86,9 @@ fi
 if [ ! -e "$test_loom_file" ]; then
     wget $test_loom_url -O $test_loom_file
 fi
-if [ ! -e "$test_anndata_file" ]; then
+#if [ ! -e "$test_anndata_file" ]; then
     # wget $test_anndata_url -O $test_anndata_file
-fi
+#fi
 if [ ! -e "$test_h5seurat_file" ]; then
     Rscript test/get_h5seurat_data.R $test_h5seurat_file
 fi
