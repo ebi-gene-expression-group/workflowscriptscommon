@@ -20,10 +20,11 @@ jobs:
           channels: defaults,conda-forge,bioconda
           auto-activate-base: false
           mamba-version: "*"
-      - shell: bash -l {0}
+      - name: Tests
+        shell: bash -l {0}
         run: |
           R -e 'remotes::install_github("satijalab/seurat-data", dependencies=FALSE)'
-      - name: Test
-        run: bash ./run_tests.sh
-      
+          conda list
+          conda info
+          bash ./run_tests.sh
           
