@@ -64,7 +64,7 @@ write_seurat3_object <- function(seurat_object, format, output_path, verbose = F
 #' @param assay Seurat assay to use, RNA by default.
 #' @param loom_normalized_path Path within /layers in loom to find the normalised data.
 #' @param loom_scaled_path Path within /layers in loom to find the scaled data.
-#' @param ... passed to Loom -> as.Seurat, singlcellexperiment -> as.Seurat, or LoadH5Seurat, depending on format.
+#' @param ... passed to Loom -> as.Seurat, singlcellexperiment -> as.Seurat, CreateSeuratObject or LoadH5Seurat, depending on input format.
 #'
 #' @export
 #'
@@ -100,7 +100,7 @@ read_seurat4_object <- function(input_path, format,
     }
     return(seurat_object)
   } else if(format == "rds_matrix") {
-    return(CreateSeuratObject(readRDS(file = input_path)))
+    return(CreateSeuratObject(readRDS(file = input_path), ...))
   } else if(format == "h5seurat") {
     return(LoadH5Seurat(file=input_path, ... ))
   } else {

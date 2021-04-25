@@ -41,8 +41,6 @@ export test_data_transfer_file=$test_working_dir/$(basename $test_data_transfer_
 export test_data_archive=$test_working_dir/$(basename $test_data_url)
 export test_single_cell_experiment_file=$test_working_dir/$(basename $test_single_cell_experiment_url)
 export test_seurat_experiment_file=$test_working_dir/$(basename $test_seurat_experiment_url | sed 's/\?dl=0//')
-#export test_single_cell_experiment_file=$test_working_dir/pbmc3k_final.rds
-#export test_scater_file=$test_working_dir/$(basename $test_scater_url)
 export test_loom_file=$test_working_dir/$(basename $test_loom_url)
 export test_anndata_file=$test_working_dir/$(basename $test_anndata_url)
 export test_h5seurat_file=$test_working_dir/pbmc3k.h5seurat
