@@ -98,7 +98,7 @@ fi
 # Run tests
 ################################################################################
 
-bats ./run_tests.bats
+bats ./run_tests_seurat_4_io.bats
 
 
 # Data for Seurat

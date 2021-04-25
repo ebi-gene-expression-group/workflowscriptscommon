@@ -1,0 +1,47 @@
+name: Seurat 4 IO CI Tests
+on: 
+  pull_request:
+    paths:
+      - test_environment_seurat_4.yml
+      - run_tests_seurat_4_io*
+      - R/seurat_io.R
+      - test/read_all_write_all.R
+jobs:
+  test_seurat_4_io:
+    name: Test Seurat 4 IO
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup BATS
+        uses: mig4/setup-bats@v1
+        with:
+          bats-version: 1.2.1
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: Cache conda
+        uses: actions/cache@v2
+        env:
+          # Increase this value to reset cache if etc/example-environment.yml has not changed
+          CACHE_NUMBER: 0
+        with:
+          path: ~/conda_pkgs_dir
+          key:
+            ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{
+            hashFiles('test_environment_seurat_4.yml') }}
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: test-wsc-seurat-4
+          python-version: 3.8
+          environment-file: test_environment_seurat_4.yml
+          channels: defaults,conda-forge,bioconda
+          auto-activate-base: false
+          mamba-version: "*"
+          use-only-tar-bz2: true
+      - name: Tests
+        shell: bash -l {0}
+        run: |
+          R -e 'remotes::install_github("satijalab/seurat-data", dependencies=FALSE)'
+          conda list
+          conda info
+          bash ./run_tests_seurat_4_io.sh
+          
