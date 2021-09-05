@@ -39,6 +39,8 @@ jobs:
           use-only-tar-bz2: true
       - name: Tests
         shell: bash -l {0}
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
           R -e 'remotes::install_github("satijalab/seurat-data", dependencies=FALSE)'
           conda list
