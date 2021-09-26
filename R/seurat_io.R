@@ -1,5 +1,30 @@
-# Write Seurat object into different file formats
 
+#' Loads packages for seurat4 IO based on a list of formats given
+#' 
+#' Reading/writing from/to different formats in Seurat 4 requires various packages.
+#' To avoid loading them all everytime, this convenience function deals with this part.
+#' 
+#' @param formats Either a single string or a list of strings with one or more of the following formats: loom, singlecellexperiment, h5seurat, anndata
+#' 
+#' @examples 
+#' load_seurat4_packages_for_format(formats = c("loom", "anndata"))
+#' load_seurat4_packages_for_format(formats = "loom")
+#' 
+#' @export
+load_seurat4_packages_for_format <- function(formats) {
+  if("loom" %in% formats ) {
+    suppressPackageStartupMessages(require(SeuratDisk))
+  if("singlecellexperiment" %in% formats ) {
+    suppressPackageStartupMessages(require(scater))
+  }
+  if("h5seurat" %in% formats | "anndata" %in% formats) {
+    suppressPackageStartupMessages(require(SeuratDisk))
+  }
+  }
+}
+
+#' Write Seurat object into different file formats
+#' 
 #' Currently Loom and Seurat (as RDS) as supported as output formats.
 #' It will fail with an error code 1 if the format is not recognised.
 #' 
@@ -13,8 +38,7 @@
 #' @export
 #'
 #' @examples
-#' > write_seurat_object(tsne_object, format="loom")
-
+#' write_seurat_object(tsne_object, format="loom")
 write_seurat4_object <- function(seurat_object, format, output_path, verbose = FALSE, assay="RNA", ...){
   if(format == "loom") {
     as.loom(seurat_object, filename = output_path, verbose = verbose)
@@ -41,14 +65,23 @@ write_seurat4_object <- function(seurat_object, format, output_path, verbose = F
 #' @param format The file format to write against: "loom", "seurat" or "singlecellexperiment"
 #' @param assay The Seurat assay to use for writing; "RNA" by default.
 #' @param verbose Only applicable to some formats, defaults to FALSE.
+#' @param ... additional arguments to as.loom or as.SingleCellExperiment, depending on input format
 #'
 #' @export
 #'
 #' @examples
-#' > write_seurat3_object(tsne_object, format="loom")
-
+#' write_seurat3_object(tsne_object, format="loom")
 write_seurat3_object <- function(seurat_object, format, output_path, verbose = FALSE, assay="RNA", ...){
-  return(write_seurat_object(seurat_object, format, output_path, verbose, assay, ...))
+  if(format == "loom") {
+    as.loom(seurat_object, filename = output_path, verbose = verbose, assay = assay, ...)
+  } else if(format == "seurat" ) {
+    saveRDS(seurat_object, file = output_path)
+  } else if(format == "singlecellexperiment") {
+    saveRDS(as.SingleCellExperiment(seurat_object, assay=assay, ...), file = output_path)
+  } else {
+    cat("Format",format,"for output not recognised, failing now.", file = stderr())
+    quit(status = 1)
+  }
 }
 
 # Read Seurat 4 object from different file formats.
@@ -69,7 +102,7 @@ write_seurat3_object <- function(seurat_object, format, output_path, verbose = F
 #' @export
 #'
 #' @examples
-#' > read_seurat3_object(input_file_loom, format="loom")
+#' read_seurat4_object(input_file_loom, format="loom")
 read_seurat4_object <- function(input_path, format, 
                                ident_for_adata = "louvain", assay="RNA", 
                                update_seurat_object = FALSE, ...) {
@@ -109,6 +142,39 @@ read_seurat4_object <- function(input_path, format,
   }
 }
 
+#' Read multiple Seurat 4 objects to a list
+#' 
+#' Receives a list of paths to seurat objects or accepted formats (a single format for all paths is expected)
+#' and produced a list of those seurat object or their converted form into Seurat objects.
+#' 
+#' @param input_path_list The list of paths to read, all in the same format. If NULL is given, it returns null instead of list.
+#' @param format A single string for either "loom", "seurat", "singlecellexperiment", "anndata", "h5seurat" or "rds_matrix". Defaults to "seurat".
+#' @param ident_for_adata If using format "anndata", which ident should be used. Defaults to "louvain".
+#' @param assay Which assay to use, defaults to "RNA"
+#' @param update_seurat_object Boolean to whether update the read seurat object or not.
+#' @param ... passed to read_seurat4_object, used based on the format set.
+#' 
+#' @return A list of Seurat objects. Can be NULL if the passed list of paths is NULL.
+#' 
+#' @export
+read_multiple_seurat4_objects<-function(input_path_list, format = "seurat", 
+                                        ident_for_adata = "louvain", assay="RNA", 
+                                        update_seurat_object = FALSE, ...) {
+  if(is.null(input_path_list)) {
+    # This is a convenience for our automated setup
+    warning("Input path list given to read_multiple_seurat4_objects is null, returning a null instead of list.")
+    return(NULL)
+  }
+  # Assumes that all datasets are in the same format, in the future we could check if format is a list or a single value
+  objects_list<-list()
+  for (input in inputs) {
+    seurat_object <- read_seurat4_object(input_path = input, format = format, ...)  
+    append(objects_list, seurat_object)->objects_list
+  }
+  
+  return(objects_list)
+}
+
 
 # Read Seurat 3 object from different file formats.
 
@@ -123,14 +189,35 @@ read_seurat4_object <- function(input_path, format,
 #' @param assay Seurat assay to use, RNA by default.
 #' @param loom_normalized_path Path within /layers in loom to find the normalised data.
 #' @param loom_scaled_path Path within /layers in loom to find the scaled data.
+#' @param ... passed to Loom -> as.Seurat, singlcellexperiment -> as.Seurat, CreateSeuratObject or ReadH5AD, depending on input format.
 #'
 #' @export
 #'
 #' @examples
-#' > read_seurat3_object(input_file_loom, format="loom")
+#' read_seurat3_object(input_file_loom, format="loom")
 read_seurat3_object <- function(input_path, format, 
                                 ident_for_adata = "louvain", assay="RNA", 
                                 loom_normalized_path="/norm_data",
                                 loom_scaled_path="/scale_data", ...) {
-  return(read_seurat_object(input_path, format, ident_for_adata, assay, loom_normalized_path, loom_scaled_path, ...))
+  if(format == "loom") {
+    loom_object <- connect(filename = input_path, mode = "r")
+    return(as.Seurat(loom_object, 
+                     assay=assay, 
+                     normalized=loom_normalized_path,
+                     scaled=loom_scaled_path, ...))
+  } else if(format == "seurat") {
+    return(readRDS(file = input_path))
+  } else if(format == "singlecellexperiment") {
+    singlecellexp_object<-readRDS(file = input_path)
+    return(as.Seurat(singlecellexp_object, assay=assay, ...))
+  } else if(format == "anndata") {
+    seurat_object<-ReadH5AD(file = input_path, ...)
+    if(! is.null(ident_for_adata)) {
+      Idents(seurat_object)<-ident_for_adata  
+    }
+    return(seurat_object)
+  } else {
+    cat("Format",format,"for input not recognised, failing now.", file = stderr())
+    quit(status = 1)
+  }
 }

@@ -16,7 +16,7 @@ function usage {
 }
 
 action=${1:-'test'}
-use_existing_outputs=${2:-'false'}
+export use_existing_outputs=${2:-'false'}
 
 if [ "$action" != 'test' ] && [ "$action" != 'clean' ]; then
     echo "Invalid action"
@@ -44,6 +44,7 @@ export test_seurat_experiment_file=$test_working_dir/$(basename $test_seurat_exp
 export test_loom_file=$test_working_dir/$(basename $test_loom_url)
 export test_anndata_file=$test_working_dir/$(basename $test_anndata_url)
 export test_h5seurat_file=$test_working_dir/pbmc3k.h5seurat
+export multiple_seurat_output=$test_working_dir/multiple_seurat.rds
 
 # Clean up if specified
 
@@ -96,7 +97,7 @@ fi
 # Run tests
 ################################################################################
 
-bats ./run_tests_seurat_4_io.bats
+./run_tests_seurat_4_io.bats
 
 
 # Data for Seurat
