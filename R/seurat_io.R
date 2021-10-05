@@ -23,6 +23,34 @@ load_seurat4_packages_for_format <- function(formats) {
   }
 }
 
+#' Change completely empty columns to "NONE
+#' 
+#' For loom output we need to check if metadata columns are 
+#' completely empty or not (all values "" for a column), if they are we need to add a non-zero 
+#' length string instead. This avoids errors like:
+#' Error in self$set_size(size) : HDF5-API Errors:
+#'    error #000: H5T.c in H5Tset_size(): line 2376: size must be positive
+#' 
+#' @param seurat_object the object for which metadata to check
+#' 
+#' @export
+#' 
+#' @return the fixed seurat object with "NONE" in all columns that had only empty values.
+change_completely_empty_metadata_cols <- function(seurat_object) {
+  so<-seurat_object
+  empty<-c()
+  for (c in 1:ncol(so@meta.data)) {
+    if (unique(so@meta.data[ , c]) == "" ) {
+      #so@meta.data[ , c]<-NULL
+      print(paste0("Column ",colnames(so@meta.data)[c]," is empty, setting to NONE"))
+      empty<-append(empty, c)
+    }
+  }
+  if (length(empty) > 0)
+    so@meta.data[ , empty]<-"NONE"
+  return(so)
+}
+
 #' Write Seurat object into different file formats
 #'
 #' Currently Loom and Seurat (as RDS) as supported as output formats.
@@ -34,8 +62,6 @@ load_seurat4_packages_for_format <- function(formats) {
 #' @param format The file format to write against: "loom", "seurat" or "singlecellexperiment"
 #' @param assay The Seurat assay to use for writing; "RNA" by default.
 #' @param verbose Only applicable to some formats, defaults to FALSE.
-#'
-#' @export
 #'
 #' @examples
 #' write_seurat_object(tsne_object, format="loom")
@@ -73,6 +99,12 @@ write_seurat4_object <- function(seurat_object, format, output_path, verbose = F
 #' write_seurat3_object(tsne_object, format="loom")
 write_seurat3_object <- function(seurat_object, format, output_path, verbose = FALSE, assay="RNA", ...){
   if(format == "loom") {
+    if (length(seurat_object@assays$RNA@var.features) == 0) {
+      # Find variable features needs to be calculated for a loom export
+      # if not already there.
+      seurat_object <- FindVariableFeatures(seurat_object)
+    }
+    seurat_object<-change_completely_empty_metadata_cols(seurat_object)
     as.loom(seurat_object, filename = output_path, verbose = verbose, assay = assay, ...)
   } else if(format == "seurat" ) {
     saveRDS(seurat_object, file = output_path)
