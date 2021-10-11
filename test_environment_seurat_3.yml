@@ -2,12 +2,12 @@ name: test-wsc-seurat-3
 dependencies:
   - bats
   - r-optparse
-  - libpng
-  - r-cairo
+  # - libpng
+  # - r-cairo
   - r-seurat<4.0.0
-  - r-loom
+  # - r-loom
   # - r-spatstat<=1.64_1
   # - r-spatstat.data<=1.64_1
   # - r-spatstat.utils<=1.64_1
   # - libopenblas
-  - bioconductor-scater
+  # - bioconductor-scater
