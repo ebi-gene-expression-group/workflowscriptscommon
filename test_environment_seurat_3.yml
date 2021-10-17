@@ -7,6 +7,7 @@ dependencies:
   - r-seurat<4.0.0
   - r-loom
   - r-base >=4.0
+  - r-matrix <=1.3_2
   - r-spatstat <=1.64_1
   - r-spatstat.data <=1.64_1
   - r-spatstat.utils <=1.64_1
