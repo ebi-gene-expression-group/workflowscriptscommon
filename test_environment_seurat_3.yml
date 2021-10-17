@@ -5,9 +5,10 @@ dependencies:
   # - libpng
   # - r-cairo
   - r-seurat<4.0.0
-  - r-loomr
-  - r-spatstat<=1.64_1
-  - r-spatstat.data<=1.64_1
-  - r-spatstat.utils<=1.64_1
+  - r-loom
+  - r-base >=4.0
+  - r-spatstat <=1.64_1
+  - r-spatstat.data <=1.64_1
+  - r-spatstat.utils <=1.64_1
   # - libopenblas
   - bioconductor-scater
