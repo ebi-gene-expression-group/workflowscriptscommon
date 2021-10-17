@@ -24,17 +24,17 @@ load_seurat4_packages_for_format <- function(formats) {
 }
 
 #' Change completely empty columns to "NONE
-#' 
-#' For loom output we need to check if metadata columns are 
-#' completely empty or not (all values "" for a column), if they are we need to add a non-zero 
+#'
+#' For loom output we need to check if metadata columns are
+#' completely empty or not (all values "" for a column), if they are we need to add a non-zero
 #' length string instead. This avoids errors like:
 #' Error in self$set_size(size) : HDF5-API Errors:
 #'    error #000: H5T.c in H5Tset_size(): line 2376: size must be positive
-#' 
+#'
 #' @param seurat_object the object for which metadata to check
-#' 
+#'
 #' @export
-#' 
+#'
 #' @return the fixed seurat object with "NONE" in all columns that had only empty values.
 change_completely_empty_metadata_cols <- function(seurat_object) {
   so<-seurat_object
@@ -230,9 +230,12 @@ read_multiple_seurat4_objects<-function(input_path_list, format = "seurat",
 read_seurat3_object <- function(input_path, format,
                                 ident_for_adata = "louvain", assay="RNA",
                                 loom_normalized_path="/norm_data",
+                                loom_connect_skip_validate=TRUE,
                                 loom_scaled_path="/scale_data", ...) {
   if(format == "loom") {
-    loom_object <- connect(filename = input_path, mode = "r")
+    loom_object <- connect(filename = input_path,
+                           mode = "r+", 
+                           skip.validate = loom_connect_skip_validate)
     return(as.Seurat(loom_object,
                      assay=assay,
                      normalized=loom_normalized_path,

@@ -45,7 +45,8 @@ export test_data_transfer_file=$test_working_dir/$(basename $test_data_transfer_
 export test_data_archive=$test_working_dir/$(basename $test_data_url)
 #export test_single_cell_experiment_file=$test_working_dir/$(basename $test_single_cell_experiment_url)
 export test_single_cell_experiment_file=${test_seurat_experiment_file}.sce.rds
-export test_loom_file=$test_working_dir/$(basename $test_loom_url)
+# export test_loom_file=$test_working_dir/$(basename $test_loom_url)
+export test_loom_file=$test_working_dir/raw_seurat.rds.loom
 export test_anndata_file=$test_working_dir/$(basename $test_anndata_url)
 export multiple_seurat_output=$test_working_dir/multiple_seurat.rds
 
@@ -81,9 +82,9 @@ fi
 #    wget $test_single_cell_experiment_url -O $test_single_cell_experiment_file
 #fi
 
-if [ ! -e "$test_loom_file" ]; then
-    wget $test_loom_url -O $test_loom_file
-fi
+#if [ ! -e "$test_loom_file" ]; then
+#    wget $test_loom_url -O $test_loom_file
+#fi
 
 if [ ! -e "$test_anndata_file" ]; then
     wget $test_anndata_url -O $test_anndata_file
