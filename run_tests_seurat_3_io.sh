@@ -34,7 +34,7 @@ test_seurat_experiment_url='https://www.dropbox.com/s/kwd3kcxkmpzqg6w/pbmc3k_fin
 #test_single_cell_experiment_url='https://scrnaseq-public-datasets.s3.amazonaws.com/scater-objects/manno_human.rds'
 #test_scater_url='https://scrnaseq-public-datasets.s3.amazonaws.com/scater-objects/manno_human.rds'
 test_loom_url='https://storage.googleapis.com/linnarsson-lab-loom/l6_r1_immune_cells.loom'
-test_anndata_url="https://seurat.nygenome.org/pbmc3k_final.h5ad"
+test_anndata_url="https://www.dropbox.com/s/ngs3p8n2i8y33hj/pbmc3k.h5ad?dl=0"
 
 export test_working_dir=`pwd`/'post_install_tests'
 export data_dir="$test_working_dir/test_data"
@@ -47,7 +47,7 @@ export test_data_archive=$test_working_dir/$(basename $test_data_url)
 export test_single_cell_experiment_file=${test_seurat_experiment_file}.sce.rds
 # export test_loom_file=$test_working_dir/$(basename $test_loom_url)
 export test_loom_file=$test_working_dir/raw_seurat.rds.loom
-export test_anndata_file=$test_working_dir/$(basename $test_anndata_url)
+export test_anndata_file=$test_working_dir/$(basename $test_anndata_url | sed 's/?dl=0//')
 export multiple_seurat_output=$test_working_dir/multiple_seurat.rds
 
 # Clean up if specified
