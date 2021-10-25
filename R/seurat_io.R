@@ -75,6 +75,13 @@ write_seurat4_object <- function(seurat_object, format, output_path, verbose = F
     saveRDS(as.SingleCellExperiment(seurat_object, assay=assay), file = output_path)
   } else if(format == "h5seurat") {
     SaveH5Seurat(seurat_object, filename = output_path, ...)
+  } else if(format == "anndata") {
+    tmpFile <- gsub(pattern = ".h5ad", replacement = ".h5seurat", x = output_path)
+    SaveH5Seurat(seurat_object, filename = tmpFile)
+    Convert(tmpFile, dest = "h5ad")
+    if(file.exists(tmpFile)) {
+      file.remove(tmpFile)
+    }
   } else {
     cat("Format",format,"for output not recognised, failing now.", file = stderr())
     quit(status = 1)
@@ -235,7 +242,7 @@ read_seurat3_object <- function(input_path, format,
                                 loom_scaled_path="/scale_data", ...) {
   if(format == "loom") {
     loom_object <- connect(filename = input_path,
-                           mode = "r+", 
+                           mode = "r+",
                            skip.validate = loom_connect_skip_validate)
     return(as.Seurat(loom_object,
                      assay=assay,
