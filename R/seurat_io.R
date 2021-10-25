@@ -41,9 +41,9 @@ change_completely_empty_metadata_cols <- function(seurat_object) {
   empty<-c()
   for (c in 1:ncol(so@meta.data)) {
     u<-unique(so@meta.data[ , c])
-    if (length(u) == 1 && toString(u) == "" ) {
+    if (length(u) == 1 && (toString(u) == "" || is.na(u))) {
       #so@meta.data[ , c]<-NULL
-      print(paste0("Column ",colnames(so@meta.data)[c]," is empty, setting to NONE"))
+      print(paste0("Column ",colnames(so@meta.data)[c]," is all empty or NA, setting to NONE"))
       empty<-append(empty, c)
     }
   }
