@@ -2,6 +2,7 @@ name: test-wsc-seurat-4
 dependencies:
   - bats
   - r-optparse
+  - r-remotes
   - libpng
   - r-cairo
   - r-seurat=4.0.0
