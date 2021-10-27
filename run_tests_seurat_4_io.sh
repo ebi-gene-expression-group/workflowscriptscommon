@@ -31,8 +31,6 @@ fi
 test_data_url='https://s3-us-west-2.amazonaws.com/10x.files/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz'
 test_data_transfer_url='https://www.dropbox.com/s/1zxbn92y5du9pu0/pancreas_v3_files.tar.gz?dl=1'
 test_seurat_experiment_url='https://www.dropbox.com/s/kwd3kcxkmpzqg6w/pbmc3k_final.rds?dl=0'
-# manno_human scater file is no longer available
-#test_single_cell_experiment_url='https://scrnaseq-public-datasets.s3.amazonaws.com/scater-objects/manno_human.rds'
 test_loom_url='https://storage.googleapis.com/linnarsson-lab-loom/l6_r1_immune_cells.loom'
 test_anndata_url="https://seurat.nygenome.org/pbmc3k_final.h5ad"
 
@@ -40,7 +38,6 @@ test_working_dir=`pwd`/'post_install_tests'
 export test_data_transfer_file=$test_working_dir/$(basename $test_data_transfer_url | sed 's/\?dl=1//')
 export test_data_archive=$test_working_dir/$(basename $test_data_url)
 export test_seurat_experiment_file=$test_working_dir/$(basename $test_seurat_experiment_url | sed 's/\?dl=0//')
-# export test_single_cell_experiment_file=$test_working_dir/$(basename $test_single_cell_experiment_url)
 export test_single_cell_experiment_file=${test_seurat_experiment_file}.sce.rds
 export test_loom_file=$test_working_dir/$(basename $test_loom_url)
 export test_anndata_file=$test_working_dir/$(basename $test_anndata_url)
@@ -71,24 +68,18 @@ mkdir -p $data_dir
 # Fetch test data
 ################################################################################
 
-#if [ ! -e "$test_data_archive" ]; then
-    # wget $test_data_url -P $test_working_dir
-#fi
-#if [ ! -e "$test_data_transfer_file" ]; then
-    # wget $test_data_transfer_url -O $test_data_transfer_file
-#fi
-#if [ ! -e "$test_single_cell_experiment_file" ]; then
-#    wget $test_single_cell_experiment_url -O $test_single_cell_experiment_file
-#fi
 if [ ! -e "$test_seurat_experiment_file" ]; then
     Rscript test/get_seurat_data.R $test_seurat_experiment_file
 fi
+
 if [ ! -e "$test_loom_file" ]; then
     wget $test_loom_url -O $test_loom_file
 fi
+
 #if [ ! -e "$test_anndata_file" ]; then
-    # wget $test_anndata_url -O $test_anndata_file
+#    wget $test_anndata_url -O $test_anndata_file
 #fi
+
 if [ ! -e "$test_h5seurat_file" ]; then
     Rscript test/get_h5seurat_data.R $test_h5seurat_file
 fi

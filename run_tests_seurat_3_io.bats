@@ -68,17 +68,6 @@
   rm -rf ${test_loom_file}.*
   run Rscript test/read_all_write_all_seurat3.R $test_loom_file loom
 
-  # writing to loom here is failing with:
-  # Adding: AnalysisPool
-  # Error in self$set_size(size) : HDF5-API Errors:
-  #     error #000: H5T.c in H5Tset_size(): line 2376: size must be positive
-  #         class: HDF5
-  #         major: Invalid arguments to routine
-  #         minor: Bad value
-  # Calls: write_seurat3_object ... getDtype -> <Anonymous> -> initialize -> <Anonymous> -> .Call
-  #
-  # similar to https://github.com/satijalab/seurat/issues/2310
-
   echo "status = ${status}"
   echo "output = ${output}"
 
@@ -103,18 +92,3 @@
   [ -f ${test_anndata_file}.sce.rds ]
   [ -f ${test_anndata_file}.rds ]
 }
-
-# @test "Read multiple seurat files into a list" {
-#   if [ "$use_existing_outputs" = 'true' ] && [ -f ${multiple_seurat_output} ]; then
-#         skip "Outputs exists and use_existing_outputs is set to 'true'"
-#   fi
-#   rm -rf ${multiple_seurat_output}
-#   run Rscript test/read_many_into_list.R ${test_seurat_experiment_file},${test_seurat_experiment_file},${test_seurat_experiment_file} \
-#       seurat ${multiple_seurat_output}
-#
-#   echo "status = ${status}"
-#   echo "output = ${output}"
-#
-#   [ "$status" -eq 0 ]
-#   [ -f ${multiple_seurat_output} ]
-# }

@@ -27,11 +27,6 @@ if( input_format == "singlecellexperiment" ) {
 so<-do.call(read_seurat3_object, params)
 print(paste0("Read file."))
 
-#if(input_format != "seurat") {
-  # For Loom export to work
-#  so <- FindVariableFeatures(object = so)
-#}
-
 ext = list(loom="loom", singlecellexperiment="sce.rds", seurat="rds")
 
 for(format in c("loom", "singlecellexperiment", "seurat")) {
