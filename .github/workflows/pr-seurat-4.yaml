@@ -1,5 +1,5 @@
 name: Seurat 4 IO CI Tests
-on: 
+on:
   pull_request:
     paths:
       - test_environment_seurat_4.yml
@@ -42,8 +42,6 @@ jobs:
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          R -e 'remotes::install_github("satijalab/seurat-data", dependencies=FALSE)'
           conda list
           conda info
           bash ./run_tests_seurat_4_io.sh
-          
