@@ -106,7 +106,7 @@ write_seurat3_object <- function(seurat_object, format, output_path, verbose = F
     if (length(seurat_object@assays[[assay]]@var.features) == 0) {
       # Find variable features needs to be calculated for a loom export
       # if not already there.
-      cat("Writing to Loom requires @assays$",assay,"@var.features to be set... running FindVariableFeatures with defaults.")
+      cat("Writing to Loom requires @assays$", assay, "@var.features to be set... running FindVariableFeatures with defaults.")
       seurat_object <- FindVariableFeatures(seurat_object, assay=assay)
     }
     seurat_object <- change_completely_empty_metadata_cols(seurat_object)
@@ -146,7 +146,7 @@ write_seurat3_object <- function(seurat_object, format, output_path, verbose = F
 read_seurat4_object <- function(input_path, format,
                                ident_for_adata = "louvain", assay="RNA",
                                update_seurat_object = FALSE, ...) {
-  if(format == "loom") {
+  if (format == "loom") {
     loom_object <- Connect(filename = input_path, mode = "r")
     return(as.Seurat(loom_object,
                      assay = assay, ...))
@@ -200,7 +200,7 @@ read_seurat4_object <- function(input_path, format,
 #' @return A list of Seurat objects. Can be NULL if the passed list of paths is NULL.
 #'
 #' @export
-read_multiple_seurat4_objects<-function(input_path_list, format = "seurat",
+read_multiple_seurat4_objects <- function(input_path_list, format = "seurat",
                                         ident_for_adata = "louvain", assay="RNA",
                                         update_seurat_object = FALSE, ...) {
   if (is.null(input_path_list)) {
@@ -212,7 +212,7 @@ read_multiple_seurat4_objects<-function(input_path_list, format = "seurat",
   objects_list <- list()
   for (input in inputs) {
     seurat_object <- read_seurat4_object(input_path = input, format = format, ...)
-    append(objects_list, seurat_object)->objects_list
+    append(objects_list, seurat_object) -> objects_list
   }
 
   return(objects_list)
@@ -243,7 +243,7 @@ read_seurat3_object <- function(input_path, format,
                                 loom_normalized_path="/norm_data",
                                 loom_connect_skip_validate=TRUE,
                                 loom_scaled_path="/scale_data", ...) {
-  if(format == "loom") {
+  if (format == "loom") {
     loom_object <- connect(filename = input_path,
                            mode = "r+",
                            skip.validate = loom_connect_skip_validate)
