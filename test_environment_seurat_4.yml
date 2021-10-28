@@ -7,5 +7,6 @@ dependencies:
   - r-cairo
   - r-seurat=4.0.0
   - r-loom
+  - hdf5-external-filter-plugins
   - bioconductor-scater
   - r-seuratdisk
