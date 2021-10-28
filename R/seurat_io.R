@@ -170,7 +170,7 @@ read_seurat4_object <- function(input_path, format,
     }
     # create link with correct extension in working directory
     Convert(input_path, dest = "h5seurat", overwrite = TRUE, assay=assay)
-    seurat_object <- LoadH5Seurat(sub(".h5ad", "h5seurat", input_path))
+    seurat_object <- LoadH5Seurat(sub(".h5ad$", ".h5seurat", input_path))
     if (!is.null(ident_for_adata)) {
       Idents(seurat_object)<-ident_for_adata
     }
