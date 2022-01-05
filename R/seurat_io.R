@@ -208,6 +208,7 @@ read_multiple_seurat4_objects <- function(input_path_list, format = "seurat",
     warning("Input path list given to read_multiple_seurat4_objects is null, returning a null instead of list.")
     return(NULL)
   }
+  inputs<-strsplit(input_path_list,split = ",")[[1]]
   # Assumes that all datasets are in the same format, in the future we could check if format is a list or a single value
   objects_list <- list()
   for (input in inputs) {
