@@ -190,7 +190,7 @@ read_seurat4_object <- function(input_path, format,
 #' Receives a list of paths to seurat objects or accepted formats (a single format for all paths is expected)
 #' and produced a list of those seurat object or their converted form into Seurat objects.
 #'
-#' @param input_path_list The list of paths to read, all in the same format. If NULL is given, it returns null instead of list.
+#' @param input_path_list The list of paths to read, all in the same format. If NULL is given, it returns null instead of list. This can be a string with paths comma separated, or an actual R list with paths.
 #' @param format A single string for either "loom", "seurat", "singlecellexperiment", "anndata", "h5seurat" or "rds_matrix". Defaults to "seurat".
 #' @param ident_for_adata If using format "anndata", which ident should be used. Defaults to "louvain".
 #' @param assay Which assay to use, defaults to "RNA"
@@ -208,7 +208,12 @@ read_multiple_seurat4_objects <- function(input_path_list, format = "seurat",
     warning("Input path list given to read_multiple_seurat4_objects is null, returning a null instead of list.")
     return(NULL)
   }
-  inputs<-strsplit(input_path_list,split = ",")[[1]]
+
+  if (is.list(input_path_list) || is.vector(input_path_list)) {
+    inputs <- input_path_list
+  } else {
+    inputs <- strsplit(input_path_list,split = ",")[[1]]
+  }
   # Assumes that all datasets are in the same format, in the future we could check if format is a list or a single value
   objects_list <- list()
   for (input in inputs) {
