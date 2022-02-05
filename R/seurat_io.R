@@ -209,7 +209,7 @@ read_multiple_seurat4_objects <- function(input_path_list, format = "seurat",
     return(NULL)
   }
 
-  if (is.list(input_path_list) || is.vector(input_path_list)) {
+  if (is.list(input_path_list)) {
     inputs <- input_path_list
   } else {
     inputs <- strsplit(input_path_list,split = ",")[[1]]
