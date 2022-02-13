@@ -1,0 +1,7 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+post_install_tests/*.loom
+post_install_tests/*.rds
+post_install_tests/*.h5seurat
